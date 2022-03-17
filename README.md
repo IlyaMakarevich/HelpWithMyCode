@@ -1,68 +1,115 @@
 ```swift
 import UIKit
 
-class ViewController: UIViewController {
+class LogInViewController: UIViewController {
     let scrollView = UIScrollView()
     let contentView = UIView()
+    let stackView = UIStackView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
         
+        view.backgroundColor = .white
         setupScrollView()
-        setupViews()
+        setupLogoImage()
+        setupStackView()
     }
     
-    func setupScrollView(){
-            scrollView.translatesAutoresizingMaskIntoConstraints = false
-            contentView.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview(scrollView)
-            scrollView.addSubview(contentView)
-            
-            scrollView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-            scrollView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-            
-            contentView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor).isActive = true
-            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
-        }
-
-    
-    func setupViews(){
-            contentView.addSubview(titleLabel)
-            titleLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
-            titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
-            titleLabel.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 3/4).isActive = true
-            
-            contentView.addSubview(subtitleLabel)
-            subtitleLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
-            subtitleLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 25).isActive = true
-            subtitleLabel.widthAnchor.constraint(equalTo: contentView.widthAnchor, multiplier: 3/4).isActive = true
-            subtitleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
-        }
-    
-    let titleLabel: UILabel = {
-            let label = UILabel()
-            label.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-            label.numberOfLines = 0
-            label.sizeToFit()
-            label.textColor = UIColor.white
-            label.translatesAutoresizingMaskIntoConstraints = false
-            return label
-        }()
+    let logoImage: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "logo.png"))
         
-        let subtitleLabel: UILabel = {
-            let label = UILabel()
-            label.text = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"
-            label.numberOfLines = 0
-            label.sizeToFit()
-            label.textColor = UIColor.white
-            label.translatesAutoresizingMaskIntoConstraints = false
-            return label
-        }()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
+    let loginTextfield: UITextField = {
+        
+        let textField = UITextField()
+        textField.placeholder = "Email and phone"
+        textField.font = UIFont.systemFont(ofSize: 16)
+        textField.keyboardType = UIKeyboardType.emailAddress
+        textField.textColor = .black
+        textField.autocapitalizationType = .none
+        textField.layer.borderColor = UIColor.lightGray.cgColor
+        textField.layer.borderWidth = 0.5
+        textField.layer.cornerRadius = 10
+        
+        return textField
+    }()
+    
+    let passwordTextfield: UITextField = {
+        
+        let textField = UITextField()
+        textField.placeholder = "Password"
+        textField.font = UIFont.systemFont(ofSize: 16)
+        textField.keyboardType = UIKeyboardType.default
+        textField.textColor = .black
+        textField.autocapitalizationType = .none
+        textField.layer.borderColor = UIColor.lightGray.cgColor
+        textField.layer.borderWidth = 0.5
+        textField.layer.cornerRadius = 10
+        textField.isSecureTextEntry = true
+        
+        return textField
+    }()
+    
+    
+    
+    func setupScrollView(){
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
+        NSLayoutConstraint.activate([
+            
+            scrollView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            scrollView.widthAnchor.constraint(equalTo: view.widthAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            contentView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
+            
+        ])
+    }
+    
+    func setupLogoImage() {
+        contentView.addSubview(logoImage)
+        
+        NSLayoutConstraint.activate([
+            logoImage.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            logoImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 120),
+            logoImage.widthAnchor.constraint(equalToConstant:100),
+            logoImage.heightAnchor.constraint(equalToConstant: 100)
+            
+            
+            
+            ])
+    }
+    
+    func setupStackView() {
+        contentView.addSubview(stackView)
+        
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.distribution = .fill
+        stackView.addArrangedSubview(loginTextfield)
+        stackView.addArrangedSubview(passwordTextfield)
+        
+        NSLayoutConstraint.activate([
+            stackView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            stackView.topAnchor.constraint(equalTo: logoImage.bottomAnchor, constant: 120),
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
+            
+            
+            
+            
+            ])
+    }
     
 }
 ```
