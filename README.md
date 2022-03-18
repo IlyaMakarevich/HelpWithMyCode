@@ -157,3 +157,14 @@ class LogInViewController: UIViewController {
 
 
 <img width="1704" alt="image" src="https://user-images.githubusercontent.com/85737410/158975702-22186cb4-8ef5-4343-8e48-b3579e3c876f.png">
+
+
+
+
+
+
+
+Вот что выходит в консоли: 
+
+2022-03-18 15:23:06.540863+0600 IB_INS_HOMEWORK1[26310:980247] [HardwareKeyboard] -[UIApplication getKeyboardDevicePropertiesForSenderID:shouldUpdate:usingSyntheticEvent:], failed to fetch device property for senderID (778835616971358211) use primary keyboard info instead.
+2022-03-18 15:23:06.542867+0600 IB_INS_HOMEWORK1[26310:980247] [HardwareKeyboard] -[UIApplication getKeyboardDevicePropertiesForSenderID:shouldUpdate:usingSyntheticEvent:], failed to fetch device property for senderID (778835616971358211) use primary keyboard info instead.
