@@ -152,3 +152,8 @@ class LogInViewController: UIViewController {
 }
 
 ```
+
+
+
+
+<img width="1704" alt="image" src="https://user-images.githubusercontent.com/85737410/158975702-22186cb4-8ef5-4343-8e48-b3579e3c876f.png">
