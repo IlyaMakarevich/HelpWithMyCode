@@ -40,6 +40,7 @@ class LogInViewController: UIViewController {
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: textField.frame.height))
         textField.leftViewMode = .always
         
+        
         return textField
     }()
     
@@ -60,11 +61,12 @@ class LogInViewController: UIViewController {
         textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: textField.frame.height))
         textField.leftViewMode = .always
         
+        
         return textField
     }()
     
     let loginButton: UIButton = {
-        let button = UIButton()
+        let button = UIButton(type: .system)
         button.setTitleColor(.white, for: .normal)
         button.setTitle("Log in", for: .normal)
         button.setBackgroundImage(UIImage(named: "blue_pixel.png"), for: .normal)
@@ -118,12 +120,14 @@ class LogInViewController: UIViewController {
         stackView.axis = .vertical
         stackView.alignment = .center
         stackView.distribution = .fillEqually
-       
+        
         stackView.addArrangedSubview(loginTextfield)
         stackView.addArrangedSubview(passwordTextfield)
         stackView.addArrangedSubview(loginButton)
         
         stackView.setCustomSpacing(16, after: passwordTextfield)
+        loginTextfield.delegate = self
+        passwordTextfield.delegate = self
         
         NSLayoutConstraint.activate([
             stackView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
@@ -149,6 +153,17 @@ class LogInViewController: UIViewController {
     func buttonTapped() {
         self.navigationController?.pushViewController(profileVC, animated: true)
     }
+}
+
+extension LogInViewController: UITextFieldDelegate {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.loginTextfield.resignFirstResponder()
+        self.passwordTextfield.resignFirstResponder()
+    }
+    
+    
+    
+    
 }
 
 ```
