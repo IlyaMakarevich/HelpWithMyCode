@@ -5,14 +5,16 @@ class LogInViewController: UIViewController {
     let scrollView = UIScrollView()
     let contentView = UIView()
     let stackView = UIStackView()
+    let profileVC = ProfileViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .white
         setupScrollView()
-        setupLogoImage()
+        setupLogo()
         setupStackView()
+        loginButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
     }
     
     let logoImage: UIImageView = {
@@ -27,12 +29,16 @@ class LogInViewController: UIViewController {
         let textField = UITextField()
         textField.placeholder = "Email and phone"
         textField.font = UIFont.systemFont(ofSize: 16)
-        textField.keyboardType = UIKeyboardType.emailAddress
+        textField.keyboardType = UIKeyboardType.default
         textField.textColor = .black
         textField.autocapitalizationType = .none
         textField.layer.borderColor = UIColor.lightGray.cgColor
         textField.layer.borderWidth = 0.5
         textField.layer.cornerRadius = 10
+        textField.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMinXMinYCorner]
+        textField.backgroundColor = .systemGray6
+        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: textField.frame.height))
+        textField.leftViewMode = .always
         
         return textField
     }()
@@ -49,10 +55,24 @@ class LogInViewController: UIViewController {
         textField.layer.borderWidth = 0.5
         textField.layer.cornerRadius = 10
         textField.isSecureTextEntry = true
+        textField.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        textField.backgroundColor = .systemGray6
+        textField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: textField.frame.height))
+        textField.leftViewMode = .always
         
         return textField
     }()
     
+    let loginButton: UIButton = {
+        let button = UIButton()
+        button.setTitleColor(.white, for: .normal)
+        button.setTitle("Log in", for: .normal)
+        button.setBackgroundImage(UIImage(named: "blue_pixel.png"), for: .normal)
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 10
+        
+        return button
+    }()
     
     
     func setupScrollView(){
@@ -60,6 +80,7 @@ class LogInViewController: UIViewController {
         contentView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
+        
         
         NSLayoutConstraint.activate([
             
@@ -76,7 +97,7 @@ class LogInViewController: UIViewController {
         ])
     }
     
-    func setupLogoImage() {
+    func setupLogo() {
         contentView.addSubview(logoImage)
         
         NSLayoutConstraint.activate([
@@ -87,29 +108,47 @@ class LogInViewController: UIViewController {
             
             
             
-            ])
+        ])
     }
     
     func setupStackView() {
         contentView.addSubview(stackView)
         
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
         stackView.alignment = .center
-        stackView.distribution = .fill
+        stackView.distribution = .fillEqually
+       
         stackView.addArrangedSubview(loginTextfield)
         stackView.addArrangedSubview(passwordTextfield)
+        stackView.addArrangedSubview(loginButton)
+        
+        stackView.setCustomSpacing(16, after: passwordTextfield)
         
         NSLayoutConstraint.activate([
-            stackView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            stackView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             stackView.topAnchor.constraint(equalTo: logoImage.bottomAnchor, constant: 120),
-            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
+            stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            
+            loginTextfield.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            loginTextfield.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            loginTextfield.heightAnchor.constraint(equalToConstant: 50),
+            passwordTextfield.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            passwordTextfield.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
+            passwordTextfield.heightAnchor.constraint(equalToConstant: 50),
+            
+            loginButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            loginButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
             
             
-            
-            
-            ])
+        ])
     }
     
+    @objc
+    func buttonTapped() {
+        self.navigationController?.pushViewController(profileVC, animated: true)
+    }
 }
+
 ```
