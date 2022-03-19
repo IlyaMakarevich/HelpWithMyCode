@@ -7,6 +7,7 @@ class LogInViewController: UIViewController {
     let stackView = UIStackView()
     let profileVC = ProfileViewController()
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -15,6 +16,11 @@ class LogInViewController: UIViewController {
         setupLogo()
         setupStackView()
         loginButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        
+        let recognizer = UITapGestureRecognizer(target: self, action: #selector(self.touch))
+        recognizer.numberOfTapsRequired = 1
+        recognizer.numberOfTouchesRequired = 1
+        scrollView.addGestureRecognizer(recognizer)
     }
     
     let logoImage: UIImageView = {
@@ -80,24 +86,26 @@ class LogInViewController: UIViewController {
     func setupScrollView(){
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         contentView.translatesAutoresizingMaskIntoConstraints = false
+        
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
         
         
         NSLayoutConstraint.activate([
-            
-            scrollView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            scrollView.widthAnchor.constraint(equalTo: view.widthAnchor),
             scrollView.topAnchor.constraint(equalTo: view.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             
-            contentView.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
-            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor)
-            
+            contentView.topAnchor.constraint(equalTo: view.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            contentView.widthAnchor.constraint(equalTo: view.widthAnchor),
         ])
     }
+    
+    
     
     func setupLogo() {
         contentView.addSubview(logoImage)
@@ -107,8 +115,6 @@ class LogInViewController: UIViewController {
             logoImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 120),
             logoImage.widthAnchor.constraint(equalToConstant:100),
             logoImage.heightAnchor.constraint(equalToConstant: 100)
-            
-            
             
         ])
     }
@@ -126,14 +132,12 @@ class LogInViewController: UIViewController {
         stackView.addArrangedSubview(loginButton)
         
         stackView.setCustomSpacing(16, after: passwordTextfield)
-        loginTextfield.delegate = self
-        passwordTextfield.delegate = self
         
         NSLayoutConstraint.activate([
             stackView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
             stackView.topAnchor.constraint(equalTo: logoImage.bottomAnchor, constant: 120),
-            stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             
             loginTextfield.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             loginTextfield.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
@@ -144,42 +148,47 @@ class LogInViewController: UIViewController {
             
             loginButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             loginButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16)
-            
-            
         ])
     }
+    
+    
     
     @objc
     func buttonTapped() {
         self.navigationController?.pushViewController(profileVC, animated: true)
     }
-}
-
-extension LogInViewController: UITextFieldDelegate {
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.loginTextfield.resignFirstResponder()
-        self.passwordTextfield.resignFirstResponder()
+    
+    @objc func touch() {
+        self.view.endEditing(true)
     }
     
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // подписаться на уведомления
+        let nc = NotificationCenter.default
+        nc.addObserver(self, selector: #selector(kbdShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        nc.addObserver(self, selector: #selector(kbdHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        // отписаться от уведомлений
+        let nc = NotificationCenter.default
+        nc.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        nc.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc private func kbdShow(notification: NSNotification) {
+        if let kbdSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            scrollView.contentInset.bottom = kbdSize.height
+            scrollView.verticalScrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: kbdSize.height, right: 0) }
+    }
+    @objc private func kbdHide(notification: NSNotification) {
+        scrollView.contentInset.bottom = .zero
+        scrollView.verticalScrollIndicatorInsets = .zero
+    }
     
     
 }
-
 ```
-
-
-
-
-<img width="1704" alt="image" src="https://user-images.githubusercontent.com/85737410/158975702-22186cb4-8ef5-4343-8e48-b3579e3c876f.png">
-
-
-
-
-
-
-
-Вот что выходит в консоли: 
-
-2022-03-18 15:23:06.540863+0600 IB_INS_HOMEWORK1[26310:980247] [HardwareKeyboard] -[UIApplication getKeyboardDevicePropertiesForSenderID:shouldUpdate:usingSyntheticEvent:], failed to fetch device property for senderID (778835616971358211) use primary keyboard info instead.
-2022-03-18 15:23:06.542867+0600 IB_INS_HOMEWORK1[26310:980247] [HardwareKeyboard] -[UIApplication getKeyboardDevicePropertiesForSenderID:shouldUpdate:usingSyntheticEvent:], failed to fetch device property for senderID (778835616971358211) use primary keyboard info instead.
